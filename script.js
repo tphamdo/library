@@ -49,10 +49,10 @@ Book.prototype.createPages = function() {
     return pages;
 }
 
-Book.prototype.createReadDiv = function() {
+Book.prototype.createReadDiv = function(index) {
     const div = document.createElement('div');
     const readText = this.createReadText();
-    const readButton = this.createReadButton();
+    const readButton = this.createReadButton(index);
     div.classList.add("read-container");
     div.appendChild(readButton);
     div.appendChild(readText);
@@ -66,11 +66,12 @@ Book.prototype.createReadText = function() {
     return read;
 }
 
-Book.prototype.createReadButton = function() {
+Book.prototype.createReadButton = function(index) {
     const input = document.createElement('input');
     input.classList.add("readButton");
     input.setAttribute("type", "checkbox");
     input.setAttribute("checked", this.read);
+    input.setAttribute("data-index", index);
     input.onclick = toggleRead;
     return input;
 }
@@ -80,7 +81,7 @@ Book.prototype.render = function(index) {
     const title = this.createTitle();
     const byAuthor = this.createByAuthor();
     const pages = this.createPages();
-    const readDiv = this.createReadDiv();
+    const readDiv = this.createReadDiv(index);
     const deleteButton = createDeleteButton(index);
 
     bookCard.appendChild(title);
@@ -128,6 +129,8 @@ function toggleRead(event) {
         let newText = oldText === "Read" ? "Not Read" : "Read";
         event.target.nextSibling.textContent = newText;
     }
+    let index = event.target.dataset.index;
+    myLibrary[index].read = event.target.checked;
 }
 
 myLibrary.forEach((book, index) => {
