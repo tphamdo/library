@@ -28,16 +28,8 @@ svg {
   cursor: pointer;
 }
 
-@font-face {
-    font-family: 'nimbus_sans_lregular';
-    src: url('fonts/nimbus-sans-l.regular-webfont.woff2') format('woff2'),
-         url('fonts/nimbus-sans-l.regular-webfont.woff') format('woff');
-    font-weight: normal;
-    font-style: normal;
-}
-
 body {
-  font-family: 'Poppins', sans-serif, "nimbus_sans_lregular", sans-serif, serif;
+  font-family: 'Poppins', sans-serif, serif;
   background-color: var(--color-8);
   line-height: 1.5;
   font-size: 18px;
