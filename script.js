@@ -5,19 +5,20 @@ const booksContainer = document.querySelector(".books-container");
 const overlay = document.querySelector(".overlay");
 const trashCanSvg = `<svg xmlns="http://www.w3.org/2000/svg" width="24" height="24" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="feather feather-trash-2"><polyline points="3 6 5 6 21 6"></polyline><path d="M19 6v14a2 2 0 0 1-2 2H7a2 2 0 0 1-2-2V6m3 0V4a2 2 0 0 1 2-2h4a2 2 0 0 1 2 2v2"></path><line x1="10" y1="11" x2="10" y2="17"></line><line x1="14" y1="11" x2="14" y2="17"></line>`
 const myLibrary = [
-    new Book("Breath: The New Science of a Lost Art", "James Nestor", 304, read=true),
-    new Book("Meditations", "Marcus Aurelius", 146, read=true),
-    new Book("Writing An Interpreter In Go", "Thorsten Bell", 264, read=true),
+    new Book("Breath: The New Science of a Lost Art", "James Nestor", 304, read=true, index=0),
+    new Book("Meditations", "Marcus Aurelius", 146, read=true, index=1),
+    new Book("Writing An Interpreter In Go", "Thorsten Bell", 264, read=true, index=2),
 ];
 
-function Book(title, author, pages, read) {
+function Book(title, author, pages, read, index) {
     this.title = title;
     this.author = author;
     this.pages = pages;
     this.read = read;
+    this.index = index;
 
     this.info = function() {
-        return `${title} by ${author}, ${pages} pages, ${read? "Read" : "Not Read Yet"}`;
+        return `${title} by ${author}, ${pages} pages, ${read? "Read" : "Not Read Yet"}, index: ${index}`;
     }
 }
 
@@ -49,10 +50,10 @@ Book.prototype.createPages = function() {
     return pages;
 }
 
-Book.prototype.createReadDiv = function(index) {
+Book.prototype.createReadDiv = function() {
     const div = document.createElement('div');
     const readText = this.createReadText();
-    const readButton = this.createReadButton(index);
+    const readButton = this.createReadButton(this.index);
     div.classList.add("read-container");
     div.appendChild(readButton);
     div.appendChild(readText);
@@ -66,23 +67,23 @@ Book.prototype.createReadText = function() {
     return read;
 }
 
-Book.prototype.createReadButton = function(index) {
+Book.prototype.createReadButton = function() {
     const input = document.createElement('input');
     input.classList.add("readButton");
     input.setAttribute("type", "checkbox");
     input.setAttribute("checked", this.read);
-    input.setAttribute("data-index", index);
+    input.setAttribute("data-index", this.index);
     input.onclick = toggleRead;
     return input;
 }
 
-Book.prototype.render = function(index) {
+Book.prototype.render = function() {
     const bookCard = this.createBookCard();
     const title = this.createTitle();
     const byAuthor = this.createByAuthor();
     const pages = this.createPages();
-    const readDiv = this.createReadDiv(index);
-    const deleteButton = createDeleteButton(index);
+    const readDiv = this.createReadDiv();
+    const deleteButton = this.renderDeleteButton();
 
     bookCard.appendChild(title);
     bookCard.appendChild(byAuthor);
@@ -93,7 +94,7 @@ Book.prototype.render = function(index) {
     booksContainer.appendChild(bookCard);
 }
 
-function createDeleteButton(index) {
+Book.prototype.renderDeleteButton = function() {
     const div = document.createElement('div');
     div.classList.add("delete-container");
     div.innerHTML = trashCanSvg;
@@ -101,7 +102,7 @@ function createDeleteButton(index) {
     let svg = div.childNodes[0];
     svg.classList.add("delete");
     svg.setAttribute("aria-label", "delete");
-    svg.setAttribute("data-index", index);
+    svg.setAttribute("data-index", this.index);
     svg.addEventListener('click', deleteBook);
 
     return div;
@@ -110,17 +111,11 @@ function createDeleteButton(index) {
 function deleteBook(event) {
     let index = event.currentTarget.dataset.index;
 
-    booksContainer.removeChild(booksContainer.childNodes[index]);
-
-    for (let i=index; i<booksContainer.childElementCount; ++i) {
-        let bookCard = booksContainer.childNodes[i];
-        let deleteDiv = bookCard.childNodes[bookCard.childNodes.length - 1];
-        let deleteButton = deleteDiv.childNodes[0];
-
-        deleteButton.dataset.index -= 1;
-    }
-    
     myLibrary.splice(index, 1);
+    for (let i=index; i<myLibrary.length; ++i) {
+        myLibrary[i].index -=1;
+    }
+    renderMyLibrary();
 }
 
 function toggleRead(event) {
@@ -133,9 +128,12 @@ function toggleRead(event) {
     myLibrary[index].read = event.target.checked;
 }
 
-myLibrary.forEach((book, index) => {
-    book.render(index);
-});
+function renderMyLibrary() {
+    booksContainer.replaceChildren() // remove all children
+    myLibrary.forEach((book, index) => {
+        book.render(index);
+    });
+}
 
 function addBookToLibrary(book) {
     myLibrary.push(book);
@@ -155,7 +153,7 @@ newBookForm.addEventListener('submit', (event) => {
     pages = newBookForm.elements['pages'].value;
     read = newBookForm.elements['read'].checked;
 
-    let book = new Book(title, author, pages, read); 
+    let book = new Book(title, author, pages, read, myLibrary.length); 
     addBookToLibrary(book);
     
     closeAddBookDialog();
@@ -167,3 +165,4 @@ newBookButton.addEventListener('click', () => {
 });
 
 overlay.onclick = closeAddBookDialog
+renderMyLibrary();
