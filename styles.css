@@ -1,0 +1,208 @@
+* {
+  margin: 0;
+}
+
+*,
+::before,
+::after {
+  box-sizing: border-box;
+}
+
+button,
+input {
+  border: none;
+  color: inherit;
+  font-family: inherit;
+  font-size: inherit;
+  font-weight: inherit;
+  cursor: pointer;
+  outline: none;
+}
+
+input[type='text'],
+input[type='number'] {
+  cursor: text;
+}
+
+svg {
+  cursor: pointer;
+}
+
+@font-face {
+    font-family: 'nimbus_sans_lregular';
+    src: url('fonts/nimbus-sans-l.regular-webfont.woff2') format('woff2'),
+         url('fonts/nimbus-sans-l.regular-webfont.woff') format('woff');
+    font-weight: normal;
+    font-style: normal;
+}
+
+body {
+  font-family: 'Poppins', sans-serif, "nimbus_sans_lregular", sans-serif, serif;
+  background-color: var(--color-8);
+  line-height: 1.5;
+  font-size: 18px;
+  font-weight: 500;
+}
+
+html {
+  min-height: 100%;
+}
+
+:root { 
+  --color-1: #264653;
+  --color-2: #2a9d8f;
+  --color-3: #e9c46a;
+  --color-4: #f4a261;
+  --color-5: #e76f51;
+  --color-6: #000000;
+  --color-7: #FFFFFF;
+  --color-8: #E5E5E5;
+  --color-9: #808080;
+}
+
+.header {
+  background-color: var(--color-7);
+  box-shadow: 0px 10px 10px 0px #ccc;
+  position: relative;
+  z-index: 1;
+}
+
+.header-container {
+  padding: 30px;
+  max-width: 1200px;
+  margin: 0 auto;
+  display: flex;
+  align-items: center;
+
+  a {
+    margin-left: auto;
+    text-decoration: inherit;
+    color: inherit;
+  }
+}
+
+button {
+  font-weight: bold;
+}
+
+.main-container{
+  padding: 24px;
+  max-width: 1200px;
+  margin: 0 auto;
+  min-height: 90vh;
+
+  & .top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    padding: 32px 0;
+    /* border: 1px solid red; */
+
+
+    & #addBookBtn {
+      padding: 8px 16px;
+      border-radius: 999px;
+      border: none;
+      font-size: 1rem;
+      background-color: var(--color-2);
+      color: var(--color-7);
+    }
+  }
+
+  & .books-container {
+    display: grid;
+    grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+    /* grid-auto-rows: 1fr; */
+    grid-gap: 24px;
+
+    & .book-card {
+      background-color: var(--color-7);
+      border-radius: 8px;
+      /* border: 1px solid red; */
+      font-size: 20px;
+      /* text-align: center; */
+      padding: 16px;
+      box-shadow: 0px 5px 5px 0px #ccc;
+      border-left: 8px solid var(--color-4);
+      display: flex;
+      flex-direction: column;
+      gap: 4px;
+      /* display: grid; */
+      /* grid-gap: 4px; */
+    }
+
+    & .read-container {
+      display: flex;
+      gap: 8px;
+    }
+
+    & .delete-container {
+      /* border: 1px solid red; */
+      display: flex;
+      justify-content: end;
+      align-items: center;
+      margin-top: auto;
+      /* padding: 50px; */
+
+      /* svg { */
+      /*   height: 24px; */
+      /*   width: 24px; */
+      /*   color: black; */
+      /* } */
+    }
+      
+    /* & .delete-icon { */
+    /*   height: 100px; */
+    /*   width: 100px; */
+    /* } */
+
+  }
+}
+
+.dialog {
+  position: fixed;
+  top: 50%;
+  left: 50%;
+  z-index: 3;
+  background-color: var(--color-8);
+  transform: translate(-50%, -50%) scale(0);
+  border-radius: 8px;
+  transition: 0.2s ease-in-out;
+
+}
+
+.dialog.active {
+  transform: translate(-50%, -50%) scale(1);
+}
+
+#newBookForm {
+  display: flex;
+  flex-direction: column;
+  padding: 16px;
+  gap: 16px;
+  
+  input, button {
+    padding: 8px;
+    border-radius: 8px;
+  }
+
+  button {
+    background-color: var(--color-2);
+    color: var(--color-7);
+  }
+}
+
+.overlay {
+  position: fixed;
+  z-index: 2;
+  top: 0;
+  left: 0;
+  display: none;
+  width: 100%;
+  height: 100%;
+  background-color: rgba(0, 0, 0, 0.5);
+}
+
+.overlay.active {
+  display: block;
+}
