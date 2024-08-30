@@ -134,6 +134,7 @@ button {
     & .read-container {
       display: flex;
       gap: 8px;
+      align-items: center;
     }
 
     & .delete-container {
@@ -149,6 +150,11 @@ button {
       /*   width: 24px; */
       /*   color: black; */
       /* } */
+    }
+
+    input {
+      height: 18px;
+      width: 18px;
     }
       
     /* & .delete-icon { */
